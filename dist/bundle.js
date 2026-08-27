@@ -15,7 +15,7 @@
   \**********************/
 () {
 
-eval("{console.log('hello from index.js')\n\n//# sourceURL=webpack://i-firebase9/./src/index.js?\n}");
+eval("{throw new Error(\"Module parse failed: 'import' and 'export' may appear only with 'sourceType: module' (1:0)\\nFile was parsed as module type 'javascript/dynamic'.\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n> 1 | import { initializeApp} from 'firebase/app'\\n    | ^\\n  2 | import { getFirestore, collection, getDocs } from 'firebase/firestore'\");\n\n//# sourceURL=webpack://i-firebase9/./src/index.js?\n}");
 
 /***/ }
 
@@ -24,7 +24,7 @@ eval("{console.log('hello from index.js')\n\n//# sourceURL=webpack://i-firebase9
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	let __webpack_exports__ = {};
 /******/ 	__webpack_modules__["./src/index.js"]();
 /******/ 	
