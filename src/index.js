@@ -23,11 +23,11 @@ console.log("db:", db);
 const colRef = collection(db, 'books');
 
 //queries
-const que = query(colRef, where("author", "==", "patrick rothfuss"))
-console.log(que)
+const q = query(colRef, where("author", "==", "patrick rothfuss"))
+console.log(q)
 
 // realtime collection data
-onSnapshot(que, (snapshot) => {
+onSnapshot(colRef, (snapshot) => {
     let books = []
     snapshot.docs.forEach(doc => {
         books.push({ ...doc.data(), id: doc.id })
