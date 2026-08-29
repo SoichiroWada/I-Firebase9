@@ -1,5 +1,8 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, onSnapshot, query, where } from 'firebase/firestore'
+import {
+    getFirestore, collection, getDocs, addDoc, deleteDoc, doc,
+    onSnapshot, query, where, orderBy, serverTimestamp
+} from 'firebase/firestore'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -23,11 +26,11 @@ console.log("db:", db);
 const colRef = collection(db, 'books');
 
 //queries
-const q = query(colRef, where("author", "==", "patrick rothfuss"))
-console.log(q)
+const que = query(colRef, where("author", "==", "patrick rothfuss"), orderBy('title', 'asc'))
+console.log(que)
 
 // realtime collection data
-onSnapshot(colRef, (snapshot) => {
+onSnapshot(que, (snapshot) => {
     let books = []
     snapshot.docs.forEach(doc => {
         books.push({ ...doc.data(), id: doc.id })
@@ -37,12 +40,14 @@ onSnapshot(colRef, (snapshot) => {
 
 // adding docs
 const addBookForm = document.querySelector('.add');
-addBookForm.addEventListener('submit', (e) => {
+addBookForm.addEventListener('submit', async (e) => {
     e.preventDefault()
+    console.count('submit handler executed');
 
     addDoc(colRef, {
         title: addBookForm.title.value,
         author: addBookForm.author.value,
+        createdAt: serverTimestamp()
     })
         .then(() => {
             addBookForm.reset()
