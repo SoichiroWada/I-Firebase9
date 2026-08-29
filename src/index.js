@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, onSnapshot, query, where } from 'firebase/firestore'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -22,8 +22,12 @@ console.log("db:", db);
 //collection ref
 const colRef = collection(db, 'books');
 
+//queries
+const que = query(colRef, where("author", "==", "patrick rothfuss"))
+console.log(que)
+
 // realtime collection data
-onSnapshot(colRef, (snapshot) => {
+onSnapshot(que, (snapshot) => {
     let books = []
     snapshot.docs.forEach(doc => {
         books.push({ ...doc.data(), id: doc.id })
