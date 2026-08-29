@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore'
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -17,48 +17,56 @@ initializeApp(firebaseConfig);
 
 //init services
 const db = getFirestore();
+console.log("db:", db);
 
 //collection ref
 const colRef = collection(db, 'books');
 
-//get collection data
-getDocs(colRef)
-    .then((snapshot) => {
-        console.log(snapshot.docs)
-        let books = [];
-        snapshot.docs.forEach((doc) => {
-            console.log(doc);
-            books.push({ ...doc.data(), id: doc.id })
-        })
-        console.log(books)
+// realtime collection data
+onSnapshot(colRef, (snapshot) => {
+    let books = []
+    snapshot.docs.forEach(doc => {
+        books.push({ ...doc.data(), id: doc.id })
     })
-    .catch(err => {
-        console.log(err.message)
-    });
+    console.log(books)
+})
 
 // adding docs
 const addBookForm = document.querySelector('.add');
 addBookForm.addEventListener('submit', (e) => {
-  e.preventDefault()
+    e.preventDefault()
 
-  addDoc(colRef, {
-    title: addBookForm.title.value,
-    author: addBookForm.author.value,
-  })
-  .then(() => {
-    addBookForm.reset()
-  })
+    addDoc(colRef, {
+        title: addBookForm.title.value,
+        author: addBookForm.author.value,
+    })
+        .then(() => {
+            addBookForm.reset()
+        })
 })
 
 // deleting docs
 const deleteBookForm = document.querySelector('.delete');
 deleteBookForm.addEventListener('submit', (e) => {
-  e.preventDefault()
+    e.preventDefault()
 
-  const docRef = doc(db, 'books', deleteBookForm.id.value)
+    const docRef = doc(db, 'books', deleteBookForm.id.value)
 
-  deleteDoc(docRef)
-    .then(() => {
-      deleteBookForm.reset()
-    })
+    deleteDoc(docRef)
+        .then(() => {
+            deleteBookForm.reset()
+        })
 })
+
+//get collection data
+// getDocs(colRef)
+//     .then((snapshot) => {
+//         let books = [];
+//         snapshot.docs.forEach((doc) => {
+//             books.push({ ...doc.data(), id: doc.id })
+//         })
+//         console.log(books)
+//     })
+//     .catch(err => {
+//         console.log(err.message)
+//     });
