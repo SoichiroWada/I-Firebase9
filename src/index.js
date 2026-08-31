@@ -12,23 +12,9 @@ initializeApp(firebaseConfig);
 
 //init services
 const db = getFirestore();
-console.log("db:", db);
 
 //collection ref
 const colRef = collection(db, 'books');
-
-//get collection data
-// getDocs(colRef)
-//     .then((snapshot) => {
-//         let books = [];
-//         snapshot.docs.forEach((doc) => {
-//             books.push({ ...doc.data(), id: doc.id })
-//         })
-//         console.log(books)
-//     })
-//     .catch(err => {
-//         console.log(err.message)
-//     });
 
 //queries
 // const que = query(colRef, where("author", "==", "patrick rothfuss"), orderBy('title', 'asc'))
@@ -105,7 +91,7 @@ updateForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const id = updateForm.id.value;
-    console.log("id",id)
+    console.log("id", id)
     const updatedTitle = updateForm.title.value;
 
     const docRef = doc(db, 'books', id)
@@ -121,17 +107,3 @@ updateForm.addEventListener('submit', (e) => {
             console.log(doc.data(), doc.id)
         })
 })
-
-//get a single document
-// const docRef = doc(db, 'books', "hhGX0EboVQ2K3cxJixW0")
-
-// getDoc(docRef)
-//     .then((doc) => {
-//         console.log(doc.data(), doc.id)
-//     })
-
-// onSnapshot(docRef, (doc) => {
-//     console.log(doc.data(), doc.id)
-// })
-
-
