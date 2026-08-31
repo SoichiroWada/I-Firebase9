@@ -2,7 +2,8 @@ import { initializeApp } from 'firebase/app'
 import { DataConnect } from 'firebase/data-connect';
 import {
     getFirestore, collection, getDocs, addDoc, deleteDoc, doc,
-    onSnapshot, query, where, orderBy, serverTimestamp, getDoc
+    onSnapshot, query, where, orderBy, serverTimestamp, getDoc,
+    updateDoc
 } from 'firebase/firestore'
 import firebaseConfig from './firebaseConfig';
 
@@ -15,6 +16,19 @@ console.log("db:", db);
 
 //collection ref
 const colRef = collection(db, 'books');
+
+//get collection data
+// getDocs(colRef)
+//     .then((snapshot) => {
+//         let books = [];
+//         snapshot.docs.forEach((doc) => {
+//             books.push({ ...doc.data(), id: doc.id })
+//         })
+//         console.log(books)
+//     })
+//     .catch(err => {
+//         console.log(err.message)
+//     });
 
 //queries
 // const que = query(colRef, where("author", "==", "patrick rothfuss"), orderBy('title', 'asc'))
@@ -59,28 +73,40 @@ deleteBookForm.addEventListener('submit', (e) => {
         })
 })
 
-//get a single document
-const docRef = doc(db, 'books', "hhGX0EboVQ2K3cxJixW0")
+//updating a document
+const updateForm = document.querySelector('.update');
 
-getDoc(docRef)
-    .then((doc) => {
-        console.log(doc.data(), doc.id)
+updateForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const id = updateForm.id.value;
+    console.log("id",id)
+    const updatedTitle = updateForm.title.value;
+
+    const docRef = doc(db, 'books', id)
+
+    updateDoc(docRef, {
+        title: updatedTitle
+    }).then(() => {
+        updateForm.reset()
     })
 
-onSnapshot(docRef, (doc) => {
-    console.log(doc.data(), doc.id)
+    getDoc(docRef)
+        .then((doc) => {
+            console.log(doc.data(), doc.id)
+        })
 })
 
+//get a single document
+// const docRef = doc(db, 'books', "hhGX0EboVQ2K3cxJixW0")
 
-//get collection data
-// getDocs(colRef)
-//     .then((snapshot) => {
-//         let books = [];
-//         snapshot.docs.forEach((doc) => {
-//             books.push({ ...doc.data(), id: doc.id })
-//         })
-//         console.log(books)
+// getDoc(docRef)
+//     .then((doc) => {
+//         console.log(doc.data(), doc.id)
 //     })
-//     .catch(err => {
-//         console.log(err.message)
-//     });
+
+// onSnapshot(docRef, (doc) => {
+//     console.log(doc.data(), doc.id)
+// })
+
+
