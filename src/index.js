@@ -32,17 +32,42 @@ const colRef = collection(db, 'books');
 
 //queries
 // const que = query(colRef, where("author", "==", "patrick rothfuss"), orderBy('title', 'asc'))
-const q = query(colRef, orderBy('title', 'asc'))
-console.log(q)
+const queryParam = query(colRef, orderBy('title', 'asc'));
+console.log(queryParam)
 
 // realtime collection data
-onSnapshot(q, (snapshot) => {
-    let books = []
-    snapshot.docs.forEach(doc => {
-        books.push({ ...doc.data(), id: doc.id })
-    })
-    console.log(books)
-})
+// onSnapshot(queryParam, (snapshot) => {
+//     let books = []
+//     snapshot.docs.forEach(doc => {
+//         books.push({ ...doc.data(), id: doc.id })
+//     })
+//     console.log(books)
+// })
+
+///////////////////////////////////////////////////////////
+const booksList = document.querySelector('.books');
+onSnapshot(queryParam, (snapshot) => {
+    booksList.innerHTML = '';
+
+    snapshot.docs.forEach((bookDocument) => {
+        const book = bookDocument.data();
+
+        const listItem = document.createElement('li');
+
+        const title = document.createElement('strong');
+        title.textContent = book.title;
+
+        const author = document.createElement('span');
+        author.textContent = ` — ${book.author}`;
+
+        const documentId = document.createElement('small');
+        documentId.textContent = ` (ID: ${bookDocument.id})`;
+
+        listItem.append(title, author, documentId);
+        booksList.append(listItem);
+    });
+});
+///////////////////////////////////////////////////////////
 
 // adding docs
 const addBookForm = document.querySelector('.add');
