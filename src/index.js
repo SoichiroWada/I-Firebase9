@@ -6,8 +6,10 @@ import {
     updateDoc
 } from 'firebase/firestore'
 import firebaseConfig from './firebaseConfig'
-import { getAuth, createUserWithEmailAndPassword,
-    signOut, signInWithEmailAndPassword } from 'firebase/auth'
+import {
+    getAuth, createUserWithEmailAndPassword, signOut,
+    signInWithEmailAndPassword, onAuthStateChanged
+} from 'firebase/auth'
 
 //init firebase app
 initializeApp(firebaseConfig);
@@ -132,28 +134,39 @@ signupForm.addEventListener('submit', (e) => {
 // logging in and out
 const logoutButton = document.querySelector('.logout')
 logoutButton.addEventListener('click', () => {
-  signOut(auth)
-    .then(() => {
-      console.log('user signed out')
-    })
-    .catch(err => {
-      console.log(err.message)
-    })
+    signOut(auth)
+        .then(() => {
+            console.log('user signed out')
+        })
+        .catch(err => {
+            console.log(err.message)
+        })
 })
 
 const loginForm = document.querySelector('.login')
 loginForm.addEventListener('submit', (e) => {
-  e.preventDefault()
+    e.preventDefault()
 
-  const email = loginForm.email.value
-  const password = loginForm.password.value
+    const email = loginForm.email.value
+    const password = loginForm.password.value
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(cred => {
-      console.log('user logged in:', cred.user)
-      loginForm.reset()
-    })
-    .catch(err => {
-      console.log(err.message)
-    })
+    signInWithEmailAndPassword(auth, email, password)
+        .then(cred => {
+            console.log('user logged in:', cred.user)
+            loginForm.reset()
+        })
+        .catch(err => {
+            console.log(err.message)
+        })
 })
+
+const element = document.getElementById('auth');
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        document.body.style.backgroundColor = 'lightblue';
+        element.innerHTML = "Firebase Auth" + " (" + user.email + ")";
+    } else {
+        document.body.style.backgroundColor = 'white';
+        element.innerHTML = "Firebase Auth";
+    }
+});
